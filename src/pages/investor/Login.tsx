@@ -1,6 +1,7 @@
 import React from 'react';
 
 const Login: React.FC = () => {
+    
     return (
         <div className="bg-white w-full flex flex-row">
             <div className="p-8 max-md:h-svh flex justify-center max-md:w-full items-center md:w-1/2">
