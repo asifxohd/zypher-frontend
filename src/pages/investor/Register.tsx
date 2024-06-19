@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import * as Yup from 'yup';
 import { useFormik } from 'formik';
 import { registerUser } from '../../Features/Action';
@@ -6,6 +6,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../store';
 import { useNavigate, Link } from 'react-router-dom';
 import Cookies from 'js-cookie';
+import { handleUserRole } from '../../Features/userAuth/userSlices';
 
 interface FormValues {
     username: string;
@@ -32,6 +33,18 @@ const RegisterPage: React.FC = () => {
 
     const { validation_errors } = useSelector((store: RootState) => store.user);
 
+    useEffect(()=> {
+        const data: any = localStorage.getItem("decodedToken");
+        const decodedToken = JSON.parse(data);
+        if (decodedToken && decodedToken.role === "investor"){
+            navigate('investor')
+        }else if (decodedToken && decodedToken.role === "startup"){
+            navigate('/startup-home')
+        }else if (decodedToken && decodedToken.role === "admin"){
+            navigate('/admin')
+        }
+    }, [])
+
     const formik = useFormik<FormValues>({
         initialValues: {
             full_name: '',
@@ -55,7 +68,7 @@ const RegisterPage: React.FC = () => {
                     navigate('/verify-otp');
                     const phoneNumber: string = response.meta.arg.phone_number;
                     Cookies.set('phoneNumber', phoneNumber);
-
+                    dispatch(handleUserRole(values.role))
 
                 } else {
                     setStatus({ errors: response.errors || ['Unknown error occurred'] });

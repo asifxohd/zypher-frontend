@@ -4,17 +4,35 @@ import axios from 'axios'; // Import Axios
 import { BASE_URL } from '../../constents';
 import Cookies from 'js-cookie';
 import { toast } from 'react-toastify';
+import { useNavigate } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 
 const OTP: React.FC = () => {
     const [otp, setOtp] = useState<string>("");
     const [phoneNumber, setPhoneNumber] = useState<string>("");
+    const navigate = useNavigate()
+    const { role } = useSelector((store: RootState) => store.user);
+
 
     useEffect(() => {
+        console.log((role.payload));
         const phoneNumberCookie = Cookies.get('phoneNumber');
         if (phoneNumberCookie) {
             setPhoneNumber(phoneNumberCookie)
         }
     }, []);
+
+    useEffect(()=> {
+        const data: any = localStorage.getItem("decodedToken");
+        const decodedToken = JSON.parse(data);
+        if (decodedToken && decodedToken.role === "investor"){
+            navigate('investor')
+        }else if (decodedToken && decodedToken.role === "startup"){
+            navigate('/startup-home')
+        }else if (decodedToken && decodedToken.role === "admin"){
+            navigate('/admin')
+        }
+    }, [])
 
     const inputStyles: CSSProperties = {
         backgroundColor: '#f0f0f0',
@@ -37,6 +55,15 @@ const OTP: React.FC = () => {
         axios.post<{ message: string }>(BASE_URL + 'auth/verify/otp/', data)
             .then(response => {
                 toast.success(response.data.message);
+                console.log(response);
+                
+                if (role.payload === 'investor'){
+                    console.log(response);
+                    localStorage.setItem("userIdInvestor", response.data.user)
+                    navigate('/investor/step-2-register')
+                }else{
+
+                }
             })
             .catch(error => {
                 toast.error(error.response.data.message);                

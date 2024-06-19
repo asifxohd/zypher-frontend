@@ -5,6 +5,7 @@ interface UserState {
     loading: boolean;
     success: boolean;
     validation_errors: any;
+    role:string;
 }
 
 // Define initial state
@@ -12,6 +13,7 @@ const initialState: UserState = {
     loading: false,
     success: false,
     validation_errors: {},
+    role:'startup'
 };
 
 
@@ -21,6 +23,9 @@ const userSlice = createSlice({
     reducers: {
         clearValidationErrors: (state) => {
             state.validation_errors = {};
+        }, 
+        handleUserRole:(state, value:any) => {
+            state.role = value
         }
     },
     extraReducers: (builder) => {
@@ -51,4 +56,4 @@ const userSlice = createSlice({
 
 // Export reducer and actions
 export default userSlice.reducer;
-export const { clearValidationErrors } = userSlice.actions;
+export const { clearValidationErrors, handleUserRole } = userSlice.actions;

@@ -1,14 +1,39 @@
 import { FcSalesPerformance, FcBusinessContact, FcMoneyTransfer } from "react-icons/fc";
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import Swal from 'sweetalert2';
+import Cookies from 'js-cookie';
 
 
 
 
-const AdminSideBar: React.FC = () => {
+const AdminSideBar: React.FC = () => {  
+
+    const navigate = useNavigate()
+
+    const handleLogout = () => {
+        Swal.fire({
+            title: 'Are you sure you want to log out?',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, log out'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                localStorage.removeItem('decodedToken');
+                Cookies.remove('accessToken');
+                Cookies.remove('refreshToken');
+                navigate('/')
+            }
+        });
+    }
+
+
+
     return (
         <>
             <nav className="fixed top-0 z-50 w-full bg-white border-b border-gray-200  :border-gray-700">
-                <div className="px-3 py-3 lg:px-5 lg:pl-3">
+                <div className="px-3 py-1 lg:px-5 lg:pl-3">
                     <div className="flex items-center justify-between">
                         <div className="flex items-center py-4 justify-start rtl:justify-end">
                             <button data-drawer-target="logo-sidebar" data-drawer-toggle="logo-sidebar" aria-controls="logo-sidebar" type="button" className="inline-flex items-center p-2 text-sm text-gray-500 rounded-lg sm:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 :text-gray-400 :hover:bg-gray-700 :focus:ring-gray-600">
@@ -39,7 +64,7 @@ const AdminSideBar: React.FC = () => {
             <aside id="logo-sidebar" className="fixed top-0 left-0 z-40 w-64 h-screen pt-20 transition-transform -translate-x-full bg-white border-r border-gray-200 sm:translate-x-0  :border-gray-700" aria-label="Sidebar">
                 <div className="h-full px-6 mt-10  pb-4 overflow-y-auto bg-white ">
                     <ul className="space-y-2 font-medium">
-                        <Link to="/admin-dashboard">
+                        <Link to="/admin">
                             <li>
                                 <div className="flex items-center p-2 text-gray-900 rounded-lg :text-white hover:bg-gray-100 :hover:bg-gray-700 group">
                                     <img className="h-7" src="https://cdn-icons-png.flaticon.com/512/6821/6821002.png" alt="" />
@@ -49,7 +74,7 @@ const AdminSideBar: React.FC = () => {
                             </li>
                         </Link>
 
-                        <Link to="/admin-salesreport">
+                        <Link to="/admin/sales-report">
                             <li>
 
                                 <div className="flex items-center p-2 text-gray-900 rounded-lg :text-white hover:bg-gray-100 :hover:bg-gray-700 group">
@@ -61,7 +86,7 @@ const AdminSideBar: React.FC = () => {
                             </li>
                         </Link>
 
-                        <Link to="/admin-investors">
+                        <Link to="/admin/investors">
                             <li>
 
                                 <div className="flex items-center p-2 text-gray-900 rounded-lg :text-white hover:bg-gray-100 :hover:bg-gray-700 group">
@@ -72,7 +97,7 @@ const AdminSideBar: React.FC = () => {
 
                             </li>
                         </Link>
-                        <Link to="/admin-startups">
+                        <Link to="/admin/startups">
                             <li>
 
                                 <div className="flex items-center p-2 text-gray-900 rounded-lg :text-white hover:bg-gray-100 :hover:bg-gray-700 group">
@@ -83,7 +108,7 @@ const AdminSideBar: React.FC = () => {
 
                             </li>
                         </Link>
-                        <Link to="/admin-subscriptions">
+                        <Link to="/admin/subscriptions">
                             <li>
 
                                 <div className="flex items-center p-2 text-gray-900 rounded-lg :text-white hover:bg-gray-100 :hover:bg-gray-700 group">
@@ -95,14 +120,16 @@ const AdminSideBar: React.FC = () => {
 
 
                     </ul>
-                    <div className="flex items-center pt-64 p-2 text-gray-900 rounded-lg :text-white hover:bg-gray-100 :hover:bg-gray-700 group">
+                    <button onClick={handleLogout} className="flex w-full text-left items-center p-2 text-gray-900 rounded-lg :text-white hover:bg-gray-100 :hover:bg-gray-700 group">
                         <img className="h-7" src="https://static.vecteezy.com/system/resources/previews/032/058/241/non_2x/exit-icon-logout-3d-illustration-rendering-transparent-png.png" alt="" />
                         <span className="flex-1 ms-3 whitespace-nowrap">Log Out</span>
-                    </div>
+                    </button>
+                    
                 </div>
+                
 
             </aside>
-
+            
 
         </>
     );

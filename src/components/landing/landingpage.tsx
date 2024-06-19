@@ -1,15 +1,31 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useState } from 'react';
 import Modal from 'react-modal';
 import RegisterCard from '../stratup&investor/registercard';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 const LandingPage: React.FC = () => {
     const [registerModal, setRegisterModal] = useState<boolean>(false);
+    const navigate = useNavigate()
 
     const handleInvestorRegister = () => {
 
     }
+
+    useEffect(()=> {
+        const data: any = localStorage.getItem("decodedToken");
+        const decodedToken = JSON.parse(data);
+        if (decodedToken && decodedToken.role === "investor"){
+            navigate('investor')
+        }else if (decodedToken && decodedToken.role === "startup"){
+            navigate('/startup-home')
+        }else if (decodedToken && decodedToken.role === "admin"){
+            navigate('/admin')
+        }else{
+            navigate("/")
+        }
+        
+    }, [])
 
 
     return (
